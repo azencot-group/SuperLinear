@@ -172,3 +172,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Dataset folder
+dataset/
+data/
+Time-300B/
+checkpoints/
