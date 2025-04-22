@@ -1,6 +1,6 @@
 
 <div align="center">
-  <h2><b>Super Linear: Foundation Time Series Forecasting</b></h2>
+  <h2><b>SuperLinear: Foundation Time Series Forecasting</b></h2>
 </div>
 
 <div align="center">
@@ -20,7 +20,7 @@
 </div>
 
 <p align="center">
-  <img src="public/placeholder.svg" width="150">
+  <img src="./figures/logo.png" width="100">
 </p>
 
 > 1️⃣ TimeSeer provides a **comprehensive foundation** for time series forecasting that combines state-of-the-art statistical models, machine learning techniques, and deep learning approaches.
@@ -46,7 +46,7 @@
 
 
 <p align="center">
-  <img src="public/placeholder.svg" alt="TimeSeer Architecture" align="center" width="700px" />
+  <img src="figures/framework.png" alt="" align="center" width="700px" />
 </p>
 
 
