@@ -1,6 +1,6 @@
 
 <div align="center">
-  <h2><b>TimeSeer: Foundation Time Series Forecasting</b></h2>
+  <h2><b>Super Linear: Foundation Time Series Forecasting</b></h2>
 </div>
 
 <div align="center">
@@ -35,15 +35,15 @@
 
 ## Updates/News:
 
-🚩 **News** (April 2025): TimeSeer v1.0.0 has been released!
+🚩 **News** (April 2025): Super Linear v1.0.0 has been released!
 
-🚩 **News** (March 2025): Added support for LSTM models and enhanced preprocessing pipeline
+🚩 **News** (March 2025): 
 
-🚩 **News** (February 2025): Beta version now available with ARIMA and Exponential Smoothing models
+🚩 **News** (February 2025): 
 
 ## Introduction
 
-TimeSeer is a comprehensive foundation for time series forecasting that provides researchers and practitioners with the tools to analyze historical data and generate accurate predictions. It supports multiple modeling approaches and offers an intuitive interface for data exploration, model training, and forecast visualization.
+
 
 <p align="center">
   <img src="public/placeholder.svg" alt="TimeSeer Architecture" align="center" width="700px" />
