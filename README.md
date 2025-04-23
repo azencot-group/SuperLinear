@@ -74,25 +74,25 @@ npm run dev
 
 ## 📈 Making Forecasts
 ```typescript
-import { TimeSeriesForecaster } from '@/lib/forecaster';
+import torch
+from transformers import AutoConfig, AutoModelForCausalLM
 
-// Load your time series data
-const data = await loadData('data.csv');
+# Use the config when loading the model
+model = AutoModelForCausalLM.from_pretrained(
+    'razmars/SuperLinear',
+    device_map="cuda",
+    trust_remote_code=True,
+)
+torch.manual_seed(42)
+device                   = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+batch, seq_len, channels = 4, 512, 3  # channels should match your model's expected input channels
+series                   = torch.randn(batch, seq_len, channels, dtype=torch.float32).to(device)
 
-// Create a forecaster with default ARIMA model
-const forecaster = new TimeSeriesForecaster({
-  model: 'arima',
-  params: { p: 1, d: 1, q: 1 }
-});
 
-// Train the model
-await forecaster.train(data);
-
-// Generate forecasts for the next 30 time points
-const forecast = await forecaster.predict(30);
-
-// Visualize results
-forecaster.plot();
+with torch.no_grad():
+    output = model(inputs_embeds=series)
+    preds  = output.logits                
+print(preds.shape)
 ```
 
 ## Evaluation

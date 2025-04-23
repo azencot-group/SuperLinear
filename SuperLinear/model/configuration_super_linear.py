@@ -22,7 +22,7 @@ class SuperLinearConfig(PretrainedConfig):
     the __init__ arguments of your original Config object.
     """
 
-    model_type = "superlinear-ts"      #  << unique key!
+    model_type = "super_linear"      
 
     def __init__(
         self,
@@ -30,9 +30,9 @@ class SuperLinearConfig(PretrainedConfig):
         pred_len=96,
         inf_pred_len=96,
         max_horizon=96,
-        auto_regressive=False,
+        auto_regressive=1,
         moe_n_experts=8,
-        top_k_experts=4,
+        top_k_experts=3,
         moe =1,
         freq_experts='mean_naive_1/6_1/7_1/8_1/12_1/14_1/16_1/21_1/24_1/28_1/30_1/32_1/36_1/42_1/48_1/52_1/56_1/60_1/72_1/84_1/96_1/120_1/144_1/168_1/180_1/224_1/252_1/288_1/336_1/365_1/504_1/672_1/1008_1/1440_1/2016_1/3600',
         **kwargs,                          # any extra CLI args
@@ -56,7 +56,7 @@ class SuperLinearConfig(PretrainedConfig):
         self.noisy_gating_std        = 0.1
         self.noisy_gating_std_decay  = 1
         self.ker_len                 = 50
-        self.con                     = 1
+        self.con                     = 0
         self.d_model                 = 512
         self.mlp_gating              = 1
         self.moe_temp                = 1
