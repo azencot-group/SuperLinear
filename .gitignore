@@ -173,8 +173,25 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# Dataset folder
+# ------------------------------ #
+# Project-specific artefacts
+# ------------------------------ #
+
+# Model checkpoints
+checkpoints/
+
+# Raw or processed datasets
 dataset/
 data/
+
+# Data-loading utilities
+data_provider/
+
+# VS Code launch configs
+launch.json
+
+# Evaluation outputs
+run_eval_2.py
+
+# Large pretrained weights that shouldn’t be versioned
 Time-300B/
-checkpoints/

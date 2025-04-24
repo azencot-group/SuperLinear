@@ -351,10 +351,10 @@ class superLinear(nn.Module):
             self.freq_experts = configs.freq_experts.split('_')
 
        
-        print(configs)
+
         self.moe_loss = None
         self.top_k_experts = configs.top_k_experts
-        #self.noisy_gating = configs.noisy_gating
+       # self.noisy_gating = configs.noisy_gating
         self.n_experts = configs.moe_n_experts
         self.freeze_experts = configs.freeze_experts
         self.layer_type = configs.layer_type
@@ -365,8 +365,6 @@ class superLinear(nn.Module):
         path = configs.linear_checkpoints_path + configs.linear_checkpoints_dir + "/"
         dirs = os.listdir(path)
         checkpoints_paths = [path + "/" + d + "/" + "checkpoint.pth" for d in dirs]
-
-        print(F"self.freq_experts : {self.freq_experts}")
 
         if self.freq_experts == "all":
             self.freq_experts = []
@@ -384,7 +382,6 @@ class superLinear(nn.Module):
                 else:
                     self.experts[expert_freq] = self.layer_dict[self.layer_type](self.seq_len, self.pred_len)
                     if configs.load_linear:
-
                         cycle = self.map_to_cycle(expert_freq)
                         cycle_str = f'cycle_{cycle}/'
                         cycle_checkpoint_path = [cp for cp in checkpoints_paths if (cycle_str in cp and self.layer_type in cp)]
@@ -467,8 +464,9 @@ class superLinear(nn.Module):
         else:
             out, self.moe_loss = self.moe(x)
 
+
         if self.auto_regressive and self.max_horizon < self.inf_pred_len:
-            print("bitch")
+            #print("bitch")
             outputs = [out]
             ar_x = torch.cat([x, out], dim=1)[:, -self.seq_len:]
             for i in range(0, self.inf_pred_len, self.max_horizon):
@@ -498,15 +496,9 @@ class SuperLinearForCausalLM(PreTrainedModel, GenerationMixin):
 
         # the backbone keeps its own Config dataclass, so build one on‑the‑fly:
         backbone_cfg   = type("Cfg", (), config.to_dict())()
+        self.args      = backbone_cfg
         self.backbone  = superLinear(backbone_cfg)
-
-        # optional final projection: map backbone output to discrete bins
-        # (delete if your model already returns logits over a vocabulary)
-        self.vocab_size = getattr(config, "vocab_size", None)
-        if self.vocab_size is not None:
-            self.lm_head = nn.Linear(backbone_cfg.pred_len, self.vocab_size)
-
-        self.post_init()                              # HF weight init
+        self.post_init()                             
 
     # ------------------------------------------------------------------
     # Forward pass expected by AutoModelForCausalLM
@@ -525,13 +517,9 @@ class SuperLinearForCausalLM(PreTrainedModel, GenerationMixin):
         
         # backbone expects (B, C, L)
         x_enc = inputs_embeds
-       
-
+    
         # backbone returns (B, pred_len, C)
         preds = self.backbone(x_enc)
-        #print(F"preds shape: {preds.shape}")
-        #print(F"preds shape: {preds.shape}")
-
         return CausalLMOutputWithCrossAttentions(loss=None,logits=preds,past_key_values=None,hidden_states=None,attentions=None,)
 
 
@@ -543,6 +531,4 @@ class SuperLinearForCausalLM(PreTrainedModel, GenerationMixin):
 
     def _reorder_cache(self, past, beam_idx, **kwargs):
         return past  # backbone keeps no KV cache
-
-"-------------------------------------------------------------------------------------------------------------------"
 

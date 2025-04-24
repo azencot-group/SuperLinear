@@ -1,15 +1,26 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // Place this file in .vscode/launch.json
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Python Debugger: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
-        }
+      {
+        "name": "Run eval-ETTh2-pred192",
+        "type": "python",
+        "request": "launch",
+  
+        // Path to your script (relative to ${workspaceFolder} or absolute)
+        "program": "${workspaceFolder}/run_eval.py",
+  
+        // Command-line arguments
+        "args": [
+          "-d", "dataset/ETT-small/ETTh2.csv",
+          "-p", "192"
+        ],
+  
+        // Optional quality-of-life tweaks
+        "console": "integratedTerminal",   // or "internalConsole"
+        "justMyCode": false,               // let the debugger step into libs
+        "cwd": "${workspaceFolder}"        // working dir for relative paths
+      }
     ]
-}
+  }
+  

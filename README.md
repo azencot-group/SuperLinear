@@ -6,9 +6,10 @@
 <div align="center">
   
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Latest-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-Latest-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+![](https://img.shields.io/github/last-commit/Time-MoE/Time-MoE?color=green)
+![](https://img.shields.io/github/stars/Time-MoE/Time-MoE?color=yellow)
+![](https://img.shields.io/github/forks/Time-MoE/Time-MoE?color=lightblue)
+![](https://img.shields.io/badge/PRs-Welcome-green)
 
 </div>
 
@@ -56,43 +57,31 @@
 
 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/timeseer.git
-cd timeseer
+pip install -r requirements.txt
 ```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Start the development server
-```bash
-npm run dev
-```
-
-
 
 ## 📈 Making Forecasts
 ```typescript
 import torch
 from transformers import AutoConfig, AutoModelForCausalLM
 
-# Use the config when loading the model
-model = AutoModelForCausalLM.from_pretrained(
-    'razmars/SuperLinear',
-    device_map="cuda",
-    trust_remote_code=True,
-)
-torch.manual_seed(42)
+
 device                   = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 batch, seq_len, channels = 4, 512, 3  # channels should match your model's expected input channels
 series                   = torch.randn(batch, seq_len, channels, dtype=torch.float32).to(device)
+torch.manual_seed(42)
 
+# Use the config when loading the model
+model = AutoModelForCausalLM.from_pretrained('razmars/SuperLinear',
+                                             device_map=device,
+                                             torch_dtype='auto',
+                                             trust_remote_code=True,
+                                             force_download=True)
 
 with torch.no_grad():
     output = model(inputs_embeds=series)
     preds  = output.logits                
-print(preds.shape)
+
 ```
 
 ## Evaluation

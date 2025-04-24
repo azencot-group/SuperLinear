@@ -57,6 +57,7 @@ class SuperLinear:
                 device_map=device,
                 torch_dtype='auto',
                 trust_remote_code=True,
+                force_download=True
             )
         except:
             model = AutoModelForCausalLM.from_pretrained(
@@ -64,15 +65,13 @@ class SuperLinear:
                 device_map=device,
                 torch_dtype='auto',
                 trust_remote_code=True,
+                force_download=True
             )
 
-
-
-        logging.info(f'>>> Model dtype: {model.dtype}; Attention:{model.config._attn_implementation}')
-
-        self.model             = model 
-        self.device            = device
-        self.prediction_length = prediction_length
+        self.model                       = model
+        self.model.backbone.inf_pred_len = prediction_length
+        self.device                      = device
+        self.prediction_length           = prediction_length
         self.model.eval()
 
     def predict(self, batch):
@@ -93,8 +92,8 @@ class SuperLinear:
 
 
 def evaluate(args):
-    batch_size = args.batch_size
-    context_length = args.context_length
+    batch_size        = args.batch_size
+    context_length    = args.context_length
     prediction_length = args.prediction_length
 
     master_addr = os.getenv('MASTER_ADDR', '127.0.0.1')
@@ -121,12 +120,9 @@ def evaluate(args):
         MAEMetric(name='mae'),
     ]
 
-    model = SuperLinear(
-        args.model,
-        device,
-        context_length=context_length,
-        prediction_length=prediction_length
-    )
+    model = SuperLinear(args.model,device,context_length=context_length,prediction_length=prediction_length)
+
+
     if args.data.endswith('.csv'):
         dataset = BenchmarkEvalDataset(
             args.data,
@@ -144,8 +140,8 @@ def evaluate(args):
         sampler = DistributedSampler(dataset=dataset, shuffle=False)
     else:
         sampler = None
-    
-    print(sampler)
+        
+
     test_dl = DataLoader(
         dataset=dataset,
         batch_size=batch_size,
@@ -219,6 +215,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--context_length', '-c',
         type=int,
+        default=512,
         help='Context length'
     )
     parser.add_argument(
@@ -228,15 +225,4 @@ if __name__ == '__main__':
         help='Prediction length'
     )
     args = parser.parse_args()
-    if args.context_length is None:
-        if args.prediction_length == 96:
-            args.context_length = 512
-        elif args.prediction_length == 192:
-            args.context_length = 1024
-        elif args.prediction_length == 336:
-            args.context_length = 2048
-        elif args.prediction_length == 720:
-            args.context_length = 3072
-        else:
-            args.context_length = args.prediction_length * 4
     evaluate(args)
