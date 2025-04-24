@@ -1,20 +1,6 @@
 #!/usr/bin/env python
 # run_superlinear_inference.py
 # ---------------------------------------------------------------
-"""
-Unified script to
-  (1) optionally convert a legacy checkpoint.pth into a HF checkpoint,
-  (2) load the model via AutoModelForCausalLM,
-  (3) run one forward pass on a dummy tensor.
-
-Usage examples
---------------
-# A) Already have HF folder
-python run_superlinear_inference.py --ckpt superlinear-ts
-
-# B) Only have checkpoint.pth
-python run_superlinear_inference.py --pth checkpoint.pth --ckpt superlinear-ts
-"""
 # ---------------------------------------------------------------
 import argparse, pathlib, shutil, torch
 

@@ -3,7 +3,7 @@ import torch, torch.nn as nn, torch.nn.functional as F
 
 from transformers                          import (PreTrainedModel,GenerationMixin,AutoConfig,AutoModelForCausalLM,)
 from transformers.modeling_outputs         import CausalLMOutputWithCrossAttentions
-from .configuration_super_linear            import SuperLinearConfig
+from .configuration_super_linear           import SuperLinearConfig
 
 
 import numpy as np
@@ -350,21 +350,23 @@ class superLinear(nn.Module):
         else:
             self.freq_experts = configs.freq_experts.split('_')
 
-        #print("self.freq_experts:", self.freq_experts)
-
+       
+        print(configs)
         self.moe_loss = None
         self.top_k_experts = configs.top_k_experts
-       # self.noisy_gating = configs.noisy_gating
+        #self.noisy_gating = configs.noisy_gating
         self.n_experts = configs.moe_n_experts
         self.freeze_experts = configs.freeze_experts
         self.layer_type = configs.layer_type
         self.model_name = "SuperLinear"
 
-        #print("self.layer_type", self.layer_type)
+        
         self.layer_dict = {'DLinear': DLinear, 'Linear': Linear, 'NLinear': NLinear, 'RLinear': RLinear}
         path = configs.linear_checkpoints_path + configs.linear_checkpoints_dir + "/"
         dirs = os.listdir(path)
         checkpoints_paths = [path + "/" + d + "/" + "checkpoint.pth" for d in dirs]
+
+        print(F"self.freq_experts : {self.freq_experts}")
 
         if self.freq_experts == "all":
             self.freq_experts = []
@@ -382,6 +384,7 @@ class superLinear(nn.Module):
                 else:
                     self.experts[expert_freq] = self.layer_dict[self.layer_type](self.seq_len, self.pred_len)
                     if configs.load_linear:
+
                         cycle = self.map_to_cycle(expert_freq)
                         cycle_str = f'cycle_{cycle}/'
                         cycle_checkpoint_path = [cp for cp in checkpoints_paths if (cycle_str in cp and self.layer_type in cp)]
@@ -448,10 +451,15 @@ class superLinear(nn.Module):
 
 
     def forward(self, x_enc, x_mark_enc=None, x_dec=None, x_mark_dec=None, mask=None, freq=[None], get_prob=False):
-        x = x_enc.permute(0, 2, 1)
-        B, V, L = x.shape
+        if len(x_enc.shape) > 2:
+            x = x_enc.permute(0, 2, 1)
+            B, V, L = x.shape
+        else:
+            x    = x_enc
+            B, L = x.shape
+            V    = 1
+            
         x = x.reshape(B * V, L)
-        
         expert_probs = None
         
         if get_prob:
@@ -460,6 +468,7 @@ class superLinear(nn.Module):
             out, self.moe_loss = self.moe(x)
 
         if self.auto_regressive and self.max_horizon < self.inf_pred_len:
+            print("bitch")
             outputs = [out]
             ar_x = torch.cat([x, out], dim=1)[:, -self.seq_len:]
             for i in range(0, self.inf_pred_len, self.max_horizon):
@@ -467,9 +476,13 @@ class superLinear(nn.Module):
                 outputs.append(ar_out)
                 ar_x = torch.cat([ar_x, ar_out], dim=1)[:, -self.seq_len:]
             out = torch.cat(outputs, dim=1)[:, :self.inf_pred_len]
-        out = out.reshape(B, V, out.shape[-1])
-        result = out.permute(0, 2, 1)
-        
+            
+        if len(x_enc.shape) > 2:
+            out = out.reshape(B, V, out.shape[-1])
+            result = out.permute(0, 2, 1)
+        else:
+            result =  out
+
         if get_prob:
             expert_probs = expert_probs.reshape(B, V, expert_probs.shape[-1])
             return result, expert_probs
@@ -510,24 +523,16 @@ class SuperLinearForCausalLM(PreTrainedModel, GenerationMixin):
         if inputs_embeds is None:
             raise ValueError("Pass the time‑series as `inputs_embeds`")
         
-
         # backbone expects (B, C, L)
         x_enc = inputs_embeds
        
 
         # backbone returns (B, pred_len, C)
-        preds = self.backbone(x_enc)[0]
-        # if we keep continuous values, treat them as logits directly
-        logits = (preds if self.vocab_size is None else self.lm_head(preds).transpose(1, 2))
+        preds = self.backbone(x_enc)
+        #print(F"preds shape: {preds.shape}")
+        #print(F"preds shape: {preds.shape}")
 
-        loss = None
-        if labels is not None:
-            # shift for causal objective
-            shift_logits = logits[..., :-1, :].contiguous()
-            shift_labels = labels[..., 1:].contiguous()
-            loss = F.cross_entropy(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
-
-        return CausalLMOutputWithCrossAttentions(loss=loss,logits=logits,past_key_values=None,hidden_states=None,attentions=None,)
+        return CausalLMOutputWithCrossAttentions(loss=None,logits=preds,past_key_values=None,hidden_states=None,attentions=None,)
 
 
     def prepare_inputs_for_generation(self, inputs_embeds, past_key_values=None, **kwargs):
@@ -540,3 +545,4 @@ class SuperLinearForCausalLM(PreTrainedModel, GenerationMixin):
         return past  # backbone keeps no KV cache
 
 "-------------------------------------------------------------------------------------------------------------------"
+

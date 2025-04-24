@@ -48,29 +48,30 @@ class MAEMetric(SumEvalMetric):
         return torch.sum(torch.abs(preds - labels))
 
 
-class TimeMoE:
+class SuperLinear:
     def __init__(self, model_path, device, context_length, prediction_length, **kwargs):
         try:
-            from time_moe.models.modeling_time_moe import TimeMoeForPrediction
-            model = TimeMoeForPrediction.from_pretrained(
+            from SuperLinear.model.modeling_super_linear import SuperLinearForCausalLM
+            model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 device_map=device,
-                # attn_implementation='flash_attention_2',
                 torch_dtype='auto',
+                trust_remote_code=True,
             )
         except:
             model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 device_map=device,
-                # attn_implementation='flash_attention_2',
                 torch_dtype='auto',
                 trust_remote_code=True,
             )
 
+
+
         logging.info(f'>>> Model dtype: {model.dtype}; Attention:{model.config._attn_implementation}')
 
-        self.model = model
-        self.device = device
+        self.model             = model 
+        self.device            = device
         self.prediction_length = prediction_length
         self.model.eval()
 
@@ -79,11 +80,12 @@ class TimeMoE:
         device = self.device
         prediction_length = self.prediction_length
 
-        outputs = model.generate(
-            inputs=batch['inputs'].to(device).to(model.dtype),
-            max_new_tokens=prediction_length,
-        )
-        preds = outputs[:, -prediction_length:]
+        series =batch['inputs']
+        with torch.no_grad():
+            outputs = model(inputs_embeds=series.to(device).to(model.dtype))
+
+        preds = outputs.logits
+
         labels = batch['labels'].to(device)
         if len(preds.shape) > len(labels.shape):
             labels = labels[..., None]
@@ -119,7 +121,7 @@ def evaluate(args):
         MAEMetric(name='mae'),
     ]
 
-    model = TimeMoE(
+    model = SuperLinear(
         args.model,
         device,
         context_length=context_length,
@@ -142,6 +144,8 @@ def evaluate(args):
         sampler = DistributedSampler(dataset=dataset, shuffle=False)
     else:
         sampler = None
+    
+    print(sampler)
     test_dl = DataLoader(
         dataset=dataset,
         batch_size=batch_size,
@@ -192,11 +196,12 @@ def evaluate(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('TimeMoE Evaluate')
+    parser = argparse.ArgumentParser('SuperLinear Evaluate')
+    
     parser.add_argument(
         '--model', '-m',
         type=str,
-        default='Maple728/TimeMoE-50M',
+        default='razmars/SuperLinear',
         help='Model path'
     )
     parser.add_argument(
