@@ -93,7 +93,7 @@ python run_eval.py -d dataset/ETT-small/ETTh1.csv -p 96
 
 
 ## 🔥 Fine-tuning 
-just cheking
+in Progress
 
 ## 📚 Citation
 
