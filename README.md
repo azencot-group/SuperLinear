@@ -6,16 +6,16 @@
 <div align="center">
   
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-![](https://img.shields.io/github/last-commit/Time-MoE/Time-MoE?color=green)
-![](https://img.shields.io/github/stars/Time-MoE/Time-MoE?color=yellow)
-![](https://img.shields.io/github/forks/Time-MoE/Time-MoE?color=lightblue)
+![](https://img.shields.io/github/last-commit/azencot-group/SuperLinear?color=green)
+![](https://img.shields.io/github/stars/azencot-group/SuperLinear?color=yellow)
+![](https://img.shields.io/github/forks/azencot-group/SuperLinear?color=lightblue)
 ![](https://img.shields.io/badge/PRs-Welcome-green)
 
 </div>
 
 <div align="center">
   
-**[<a href="https://github.com/your-username/timeseer">GitHub</a>]**
+**[<a href="https://github.com/azencot-group/SuperLinear">GitHub</a>]**
 **[<a href="https://your-docs-url.com">Documentation</a>]**
 
 </div>
@@ -93,7 +93,8 @@ python run_eval.py -d dataset/ETT-small/ETTh1.csv -p 96
 
 
 ## 🔥 Fine-tuning 
-in Progress
+
+⏳ In progress
 
 ## 📚 Citation
 
