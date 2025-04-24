@@ -21,7 +21,7 @@
 </div>
 
 <p align="center">
-  <img src="./figures/logo.png" width="100">
+  <img src="./figures/logo.png" width="500">
 </p>
 
 > 1️⃣ TimeSeer provides a **comprehensive foundation** for time series forecasting that combines state-of-the-art statistical models, machine learning techniques, and deep learning approaches.
