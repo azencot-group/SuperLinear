@@ -85,6 +85,13 @@ with torch.no_grad():
 
 ## Evaluation
 
++ [Example] Running the follow command to evaluate on ETTh1.
+
+```shell
+python run_eval.py -d dataset/ETT-small/ETTh1.csv -p 96
+```
+
+
 ## 🔥 Fine-tuning 
 just cheking
 
