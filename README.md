@@ -24,26 +24,25 @@
   <img src="./figures/logo.png" width="250">
 </p>
 
-> 1️⃣ TimeSeer provides a **comprehensive foundation** for time series forecasting that combines state-of-the-art statistical models, machine learning techniques, and deep learning approaches.
+> Super Linear provides a **comprehensive foundation** for time series forecasting achieveing competitive performance against more complex models
+Under efficient architecture combine mixture of frequencies linears experts.
 
-> 2️⃣ Supports **multiple forecasting models** including ARIMA, Exponential Smoothing, Prophet, LSTM, and Transformer-based architectures.
+
 
 ## TODO List
-- [ ] Add support for multivariate time series
-- [ ] Implement Prophet and Transformer-based models
-- [ ] Add interactive visualization dashboards
-- [ ] Enable GPU acceleration for neural models
+- [ ] Add support for other time series tasks as: probabilistic forecasting, Classifiction, Annomaly ditaction etc'
+- [ ] Fine Tuning on specific lookback and horiozn
+- [ ] Train from Scratch
 
 ## Updates/News:
 
-🚩 **News** (April 2025): Super Linear v1.0.0 has been released!
+🚩 **News** (may 2025): Super Linear v1.0.0 has been released!
 
 🚩 **News** (March 2025): 
 
 🚩 **News** (February 2025): 
 
 ## Introduction
-
 
 
 <p align="center">
@@ -91,27 +90,40 @@ just cheking
 
 ## 📚 Citation
 
-If you use TimeSeer in your research, please cite:
+> Please let us know if you find out a mistake or have any suggestions!
+
+> If you use SuperLinear in your research, please cite:, please consider to star this repository and cite the 
+corresponding [paper](https://arxiv.org/pdf/2409.16040):
 
 ```
-@software{timeseer2025,
-  author = {Your Name},
-  title = {TimeSeer: Foundation Time Series Forecasting},
-  year = {2025},
-  url = {https://github.com/your-username/timeseer}
+@misc{shi2024timemoe,
+      title={Time-MoE: Billion-Scale Time Series Foundation Models with Mixture of Experts}, 
+      author={Xiaoming Shi and Shiyu Wang and Yuqi Nie and Dianqi Li and Zhou Ye and Qingsong Wen and Ming Jin},
+      year={2024},
+      eprint={2409.16040},
+      archivePrefix={arXiv},
+      url={https://arxiv.org/abs/2409.16040}, 
 }
 ```
-
 ## Related Resources
-* Transformers in Time Series: A Survey, IJCAI 2023. [paper](https://arxiv.org/abs/2202.07125)
-* Self-Supervised Learning for Time Series Analysis: Taxonomy, Progress, and Prospects, TPAMI 2024. [paper](https://arxiv.org/abs/2306.10125)
-* Foundation Models for Time Series Analysis: A Tutorial and Survey, KDD 2024. [paper](https://arxiv.org/abs/2403.14735)
+* Time-Moe: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
+* Foundation Models for Time Series Analysis: A Tutorial and Survey, in *KDD*
+  2024. [\[paper\]](https://arxiv.org/abs/2403.14735) [\[Tutorial\]](https://wenhaomin.github.io/FM4TS.github.io/)
+* What Can Large Language Models Tell Us about Time Series Analysis, in *ICML*
+  2024. [\[paper\]](https://arxiv.org/abs/2402.02713)
+* Transformers in Time Series: A Survey, in *IJCAI*
+  2023. [\[paper\]](https://arxiv.org/abs/2202.07125) [\[GitHub Repo\]](https://github.com/qingsongedu/time-series-transformers-review)
+
 
 ## Acknowledgments
 
-- Inspired by Facebook's Prophet and other open-source forecasting libraries
-- Thanks to all contributors who have helped shape this project
-- Special thanks to the research community for advancing the field of time series forecasting
+We appreciate the following GitHub repos a lot for their valuable code and efforts.
+- Time-Moe [\[repo\]](ttps://github.com/Time-MoE/Time-MoE)
+- Time-LLM  [\[repo\]](https://github.com/KimMeen/Time-LLM)
+- TimeMixer [\[repo\]](https://github.com/kwuking/TimeMixer)
+- Time-Series-Library [\[repo\]](https://github.com/thuml/Time-Series-Library)
+- Large (Language) Models and Foundation Models (LLM, LM, FM) for Time Series and Spatio-Temporal
+  Data [\[repo\]](https://github.com/qingsongedu/Awesome-TimeSeries-SpatioTemporal-LM-LLM)
 
 ## License
 
