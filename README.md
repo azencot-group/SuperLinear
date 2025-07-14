@@ -21,7 +21,7 @@
 </div>
 
 <p align="center">
-  <img src="./figures/logo.png" width="250">
+  <img src="./figures/logo.png" width="600">
 </p>
 
 > Super Linear provides a **comprehensive foundation** for time series forecasting achieveing competitive performance against more complex models
