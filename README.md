@@ -1,6 +1,6 @@
 
 <div align="center">
-  <h2><b>SuperLinear: Foundation Time Series Forecasting</b></h2>
+  <h2><b>Super-Linear: A Lightweight Pretrained Mixture of Linear Experts for Time Series Forecasting</b></h2>
 </div>
 
 <div align="center">
@@ -25,7 +25,7 @@
 </p>
 
 > Super Linear provides a **comprehensive foundation** for time series forecasting achieveing competitive performance against more complex models
-Under efficient architecture combine mixture of frequencies linears experts.
+with an efficient architecture combine mixture of frequencies linears experts.
 
 
 
@@ -36,11 +36,8 @@ Under efficient architecture combine mixture of frequencies linears experts.
 
 ## Updates/News:
 
-🚩 **News** (may 2025): Super Linear v1.0.0 has been released!
+🚩 **News** (July 2025): Super Linear v1.0.0 has been released!
 
-🚩 **News** (March 2025): 
-
-🚩 **News** (February 2025): 
 
 ## Introduction
 
@@ -59,30 +56,53 @@ Under efficient architecture combine mixture of frequencies linears experts.
 pip install -r requirements.txt
 ```
 
-## 📈 Making Forecasts
+## 📈 Making Forecasts (Hugging Face)
 ```typescript
 import torch
-from transformers import AutoConfig, AutoModelForCausalLM
+from transformers import AutoModelForCausalLM
 
 
 device                   = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-batch, seq_len, channels = 4, 512, 3  # channels should match your model's expected input channels
+batch, seq_len, channels = 4, 512, 3  # channels 
 series                   = torch.randn(batch, seq_len, channels, dtype=torch.float32).to(device)
 torch.manual_seed(42)
 
-# Use the config when loading the model
-model = AutoModelForCausalLM.from_pretrained('razmars/SuperLinear',
-                                             device_map=device,
-                                             torch_dtype='auto',
-                                             trust_remote_code=True,
-                                             force_download=True)
+model_path = 'SequentialLearning/SuperLinear'
+model = AutoModelForCausalLM.from_pretrained(model_path,trust_remote_code=True, force_download=True).to(device)
 
 with torch.no_grad():
     output = model(inputs_embeds=series)
-    preds  = output.logits                
+    preds  = output.logits              
 
 ```
+## 📈 Making Forecasts (Local)
+```typescript
+from utils.args import get_args
+from models.SuperLinear import Model
+import numpy as np
+import torch
 
+args = get_args(notebook=True)
+for key, value in args.__dict__.items():
+    print(f"{key}: {value}")
+
+seq_len = 512
+pred_len = 96
+
+freq = 1/48
+amp = 1
+ph = 0
+
+t = torch.arange(0, seq_len+ pred_len)
+s = amp * torch.sin(2 * np.pi * freq * t + ph)
+x = s[:seq_len].unsqueeze(0)  # Add batch dim
+y = s[seq_len:].unsqueeze(0)  # Add batch dim
+
+super_linear = Model(args)
+super_linear.eval()
+
+out, prob = super_linear(x, pred_len=pred_len,  get_prob=True)
+```
 ## Evaluation
 
 + [Example] Running the follow command to evaluate on ETTh1.
@@ -98,10 +118,7 @@ python run_eval.py -d dataset/ETT-small/ETTh1.csv -p 96
 
 ## 📚 Citation
 
-> Please let us know if you find out a mistake or have any suggestions!
-
-> If you use SuperLinear in your research, please cite:, please consider to star this repository and cite the 
-corresponding [paper](https://arxiv.org/pdf/2409.16040):
+> todo
 
 ```
 @misc{shi2024timemoe,
@@ -117,21 +134,13 @@ corresponding [paper](https://arxiv.org/pdf/2409.16040):
 * Time-Moe: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
 * Foundation Models for Time Series Analysis: A Tutorial and Survey, in *KDD*
   2024. [\[paper\]](https://arxiv.org/abs/2403.14735) [\[Tutorial\]](https://wenhaomin.github.io/FM4TS.github.io/)
-* What Can Large Language Models Tell Us about Time Series Analysis, in *ICML*
-  2024. [\[paper\]](https://arxiv.org/abs/2402.02713)
-* Transformers in Time Series: A Survey, in *IJCAI*
-  2023. [\[paper\]](https://arxiv.org/abs/2202.07125) [\[GitHub Repo\]](https://github.com/qingsongedu/time-series-transformers-review)
-
 
 ## Acknowledgments
 
 We appreciate the following GitHub repos a lot for their valuable code and efforts.
 - Time-Moe [\[repo\]](ttps://github.com/Time-MoE/Time-MoE)
-- Time-LLM  [\[repo\]](https://github.com/KimMeen/Time-LLM)
-- TimeMixer [\[repo\]](https://github.com/kwuking/TimeMixer)
 - Time-Series-Library [\[repo\]](https://github.com/thuml/Time-Series-Library)
-- Large (Language) Models and Foundation Models (LLM, LM, FM) for Time Series and Spatio-Temporal
-  Data [\[repo\]](https://github.com/qingsongedu/Awesome-TimeSeries-SpatioTemporal-LM-LLM)
+
 
 ## License
 

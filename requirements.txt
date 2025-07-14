@@ -3,7 +3,7 @@ numpy
 pandas
 torch
 scikit-learn
-
+ipykernel
 transformers==4.40.1
 datasets==2.18.0
 accelerate==0.28.0
