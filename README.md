@@ -118,7 +118,7 @@ python run_eval.py -d dataset/weather/weather.csv -p 720
 ## Acknowledgments
 
 We appreciate the following GitHub repos a lot for their valuable code and efforts.
-- Time-Moe [\[repo\]](ttps://github.com/Time-MoE/Time-MoE)
+- Time-Moe [\[repo\]](https://github.com/Time-MoE/Time-MoE)
 - Time-Series-Library [\[repo\]](https://github.com/thuml/Time-Series-Library)
 
 
