@@ -132,7 +132,7 @@ def evaluate(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('SuperLinear Evaluate')
-    parser.add_argument('--model', '-m', type=str, default='./model_files/', help='Model path')
+    parser.add_argument('--model', '-m', type=str, default='SequentialLearning/SuperLinear', help='Model path, try ./model_files/ for local or SequentialLearning/SuperLinear for huggingface')
     parser.add_argument('--data', '-d', type=str, required=True, help='Benchmark data path')
     parser.add_argument('--batch_size', '-b', type=int, default=32, help='Batch size of evaluation')
     parser.add_argument('--context_length', '-c', type=int, default=512, help='Context length')

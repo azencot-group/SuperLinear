@@ -1,3 +1,18 @@
+
+---
+license: mit
+tags:
+  - time-series
+  - mixture-of-experts
+  - forecasting
+  - pytorch
+  - fft
+model-index:
+  - name: SuperLinear
+    results: []
+---
+
+
 # SuperLinear: A Mixture of Experts Time Series Forecasting Model
 
 SuperLinear is a novel time series forecasting model that employs a Mixture of Experts (MoE) architecture to achieve superior performance across various forecasting tasks. The model routes inputs to the most relevant experts based on frequency-domain analysis using FFT-based gating networks.
@@ -24,7 +39,7 @@ from transformers import AutoModelForCausalLM, AutoConfig
 import torch
 
 # Load the model
-model = AutoModelForCausalLM.from_pretrained("path/to/superlinear", trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained("SequentialLearning/SuperLinear", trust_remote_code=True)
 
 # Prepare input time series data
 # Shape: [batch_size, sequence_length, features]

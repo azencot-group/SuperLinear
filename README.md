@@ -32,7 +32,6 @@ with an efficient architecture combine mixture of frequencies linears experts.
 🚩 **News** (September 2025): Super Linear v1.0.0 has been released!
 
 
-## Introduction
 
 ## 🚀 Getting Started
 
@@ -71,6 +70,8 @@ with torch.no_grad():
 expert_names = model.backbone.experts.keys()
 
 ```
+
+
 ### Data Preparation
 
 You can obtain all the benchmarks from [Google Drive](https://drive.google.com/drive/folders/1ZOYpTUa82_jCcxIdTmyr0LXQfvaM9vIy) provided in Autoformer. All the datasets are well pre-processed and can be used easily.
@@ -104,11 +105,13 @@ python run_eval.py -d dataset/weather/weather.csv -p 720
 
 ## 🔥 Full-Shot, Few-Shot
 
-⏳ In progress
+In progress
 
-## 📚 Citation
 
-> todo
+## 📚 TODO ⏳
+
+* Add citation 📚
+* Add Super-Linear to GIFT-Eval. The results and notebook for GIFT-Eval can be found in the gift-eval directory.
 
 ## Related Resources
 * Time-Moe: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
