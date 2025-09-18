@@ -62,15 +62,19 @@ Key configuration parameters:
 - `freq_experts`: Frequency-specific expert configuration
 - `moe_temp`: Temperature for expert selection during inference (default: 1)
 
+## Link to GitHub
+
+[https://github.com/azencot-group/SuperLinear](https://github.com/azencot-group/SuperLinear)
+
 ## Citation
 
 If you use SuperLinear in your research, please cite:
 
 ```bibtex
-@article{superlinear2024,
-  title={SuperLinear: Mixture of Experts for Time Series Forecasting},
+@article{todo,
+  title={SuperLinear: todo},
   author={Your Name},
-  year={2024}
+  year={2025}
 }
 ```
 
