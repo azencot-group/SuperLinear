@@ -47,7 +47,8 @@ pip install -r requirements.txt
 import torch
 from transformers import AutoModelForCausalLM
 
-model_path = "./model_files/"
+model_path = "./model_files/" # local
+model_path = "SequentialLearning/SuperLinear" # hugging_face
 model = AutoModelForCausalLM.from_pretrained(model_path,trust_remote_code=True, force_download=True)
 
 seq_len = 512
