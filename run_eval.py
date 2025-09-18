@@ -55,11 +55,11 @@ class SuperLinear:
         self.prediction_length = prediction_length
         self.model.eval()
 
-    def predict(self, batch):
+    def predict(self, batch, pred_len=None):
         series = batch['inputs'].to(self.device).to(self.model.dtype)
         labels = batch['labels'].to(self.device)
         with torch.no_grad():
-            outputs = self.model(inputs_embeds=series)
+            outputs = self.model(inputs_embeds=series, pred_len=self.prediction_length)
         preds = outputs.logits
 
         if preds.dim() > labels.dim():
@@ -110,7 +110,7 @@ def evaluate(args):
 
     acc_count = 0
     for batch in tqdm(test_dl, desc="Evaluating"):
-        preds, labels = model.predict(batch)
+        preds, labels = model.predict(batch, pred_len=args.prediction_length)
         for metric in metric_list:
             metric.push(preds, labels)
         acc_count += count_num_tensor_elements(preds)
@@ -132,7 +132,7 @@ def evaluate(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('SuperLinear Evaluate')
-    parser.add_argument('--model', '-m', type=str, default='SequentialLearning/SuperLinear', help='Model path')
+    parser.add_argument('--model', '-m', type=str, default='./model_files/', help='Model path')
     parser.add_argument('--data', '-d', type=str, required=True, help='Benchmark data path')
     parser.add_argument('--batch_size', '-b', type=int, default=32, help='Batch size of evaluation')
     parser.add_argument('--context_length', '-c', type=int, default=512, help='Context length')

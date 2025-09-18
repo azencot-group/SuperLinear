@@ -1,0 +1,48 @@
+{
+  "_name_or_path": "super_linear",
+  "architectures": [
+    "SuperLinearForCausalLM"
+  ],
+  "auto_map": {
+    "AutoConfig": "configuration_super_linear.SuperLinearConfig",
+    "AutoModelForCausalLM": "modeling_super_linear.SuperLinearForCausalLM"
+  },
+  
+  "_comment_model_architecture": "Model architecture parameters",
+  "train_seq_len": 512,
+  "train_pred_len": 96,
+  
+  "_comment_moe": "MoE (Mixture of Experts) parameters",
+  "top_k_experts": 12,
+  "noisy_gating_std": 0.1,
+  "moe_temp": 1.0,
+  "moe_norm": false,
+  "layer_type": "RLinear",
+  "comp_moe": 12,
+  "freeze_experts": true,
+  
+  "_comment_fft": "FFT-based gating parameters",
+  "use_fft": true,
+  "fft_len": 5000,
+  
+  "_comment_experts": "Expert configuration",
+  "freq_experts": "mean_naive_1/4_1/6_1/7_1/8_1/12_1/14_1/16_1/21_1/24_1/28_1/30_1/32_1/36_1/42_1/48_1/52_1/56_1/60_1/72_1/84_1/90_1/96_1/120_1/144_1/168_1/180_1/224_1/252_1/288_1/336_1/365_1/504_1/672_1/1008_1/1440_1/2016_1/3600",
+  
+  "_comment_training": "Training parameters",
+  "resample_long_lookback": false,
+  
+  "_comment_horizon": "Auto-regressive and horizon parameters",
+  "long_horizon_scaling": 1,
+  
+  "_comment_resampling": "Resampling and lookback-based parameters",
+  "lookback_resampling": 1,
+  "scale_list": "2,4,6",
+  "threshold": 0.2,
+  "freq_bound": 0.25,
+  "penalty_scale": 2.0,
+  
+  "_comment_system": "System and framework parameters",
+  "model_type": "super_linear",
+  "torch_dtype": "float32",
+  "transformers_version": "4.40.1"
+}

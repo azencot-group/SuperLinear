@@ -27,25 +27,12 @@
 > Super Linear provides a **comprehensive foundation** for time series forecasting achieveing competitive performance against more complex models
 with an efficient architecture combine mixture of frequencies linears experts.
 
-
-
-## TODO List
-- [ ] Add support for other time series tasks as: probabilistic forecasting, Classifiction, Annomaly ditaction etc'
-- [ ] Fine Tuning on specific lookback and horiozn
-- [ ] Train from Scratch
-
 ## Updates/News:
 
-🚩 **News** (July 2025): Super Linear v1.0.0 has been released!
+🚩 **News** (September 2025): Super Linear v1.0.0 has been released!
 
 
 ## Introduction
-
-
-<p align="center">
-  <img src="figures/framework.png" alt="" align="center" width="700px" />
-</p>
-
 
 ## 🚀 Getting Started
 
@@ -61,35 +48,13 @@ pip install -r requirements.txt
 import torch
 from transformers import AutoModelForCausalLM
 
-
-device                   = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-batch, seq_len, channels = 4, 512, 3  # channels 
-series                   = torch.randn(batch, seq_len, channels, dtype=torch.float32).to(device)
-torch.manual_seed(42)
-
-model_path = 'SequentialLearning/SuperLinear'
-model = AutoModelForCausalLM.from_pretrained(model_path,trust_remote_code=True, force_download=True).to(device)
-
-with torch.no_grad():
-    output = model(inputs_embeds=series)
-    preds  = output.logits              
-
-```
-## 📈 Making Forecasts (Local)
-```typescript
-from utils.args import get_args
-from models.SuperLinear import Model
-import numpy as np
-import torch
-
-args = get_args(notebook=True)
-for key, value in args.__dict__.items():
-    print(f"{key}: {value}")
+model_path = "./model_files/"
+model = AutoModelForCausalLM.from_pretrained(model_path,trust_remote_code=True, force_download=True)
 
 seq_len = 512
 pred_len = 96
 
-freq = 1/48
+freq = 1/32
 amp = 1
 ph = 0
 
@@ -98,21 +63,46 @@ s = amp * torch.sin(2 * np.pi * freq * t + ph)
 x = s[:seq_len].unsqueeze(0)  # Add batch dim
 y = s[seq_len:].unsqueeze(0)  # Add batch dim
 
-super_linear = Model(args)
-super_linear.eval()
+with torch.no_grad():
+    # takes shapes (B, V, L) or (B, L)
+    output = model(x, pred_len=pred_len, get_prob=True)
+    preds = output.logits # Predicted values
+    probs = output.attentions  # Expert probabilities stored here
+expert_names = model.backbone.experts.keys()
 
-out, prob = super_linear(x, pred_len=pred_len,  get_prob=True)
 ```
+### Data Preparation
+
+You can obtain all the benchmarks from [Google Drive](https://drive.google.com/drive/folders/1ZOYpTUa82_jCcxIdTmyr0LXQfvaM9vIy) provided in Autoformer. All the datasets are well pre-processed and can be used easily.
+
+```
+mkdir dataset
+```
+**Please put them in the `./dataset` directory**
+
 ## Evaluation
 
-+ [Example] Running the follow command to evaluate on ETTh1.
++ [Example] Running the follow command to evaluate on ETTh1 with prediciton horizon 96
 
 ```shell
 python run_eval.py -d dataset/ETT-small/ETTh1.csv -p 96
 ```
 
++ [Example] Running the follow command to evaluate on ETTh1 with prediciton horizon 720
 
-## 🔥 Fine-tuning 
+```shell
+python run_eval.py -d dataset/ETT-small/ETTh1.csv -p 720
+```
+
+
++ [Example] Running the follow command to evaluate on weather with prediciton horizon 720
+
+```shell
+python run_eval.py -d dataset/weather/weather.csv -p 720
+```
+
+
+## 🔥 Full-Shot, Few-Shot
 
 ⏳ In progress
 
@@ -120,16 +110,6 @@ python run_eval.py -d dataset/ETT-small/ETTh1.csv -p 96
 
 > todo
 
-```
-@misc{shi2024timemoe,
-      title={Time-MoE: Billion-Scale Time Series Foundation Models with Mixture of Experts}, 
-      author={Xiaoming Shi and Shiyu Wang and Yuqi Nie and Dianqi Li and Zhou Ye and Qingsong Wen and Ming Jin},
-      year={2024},
-      eprint={2409.16040},
-      archivePrefix={arXiv},
-      url={https://arxiv.org/abs/2409.16040}, 
-}
-```
 ## Related Resources
 * Time-Moe: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
 * Foundation Models for Time Series Analysis: A Tutorial and Survey, in *KDD*
