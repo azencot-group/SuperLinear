@@ -54,7 +54,7 @@ model = AutoModelForCausalLM.from_pretrained(model_path,trust_remote_code=True, 
 seq_len = 512
 pred_len = 96
 
-freq = 1/32
+freq = 1/24
 amp = 1
 ph = 0
 
@@ -109,10 +109,10 @@ python run_eval.py -d dataset/weather/weather.csv -p 720
 In progress
 
 
-## 📚 TODO ⏳
+## TODO ⏳
 
 * Add citation 📚
-* Add Super-Linear to GIFT-Eval. The results and notebook for GIFT-Eval can be found in the gift-eval directory.
+* Add Super-Linear to GIFT-Eval leaderboard. The results and notebook for GIFT-Eval can be found in the gift-eval directory.
 
 ## Related Resources
 * Time-Moe: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
