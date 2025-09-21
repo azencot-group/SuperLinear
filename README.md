@@ -37,7 +37,7 @@ Super-Linear delivers competitive, and in some cases surpassing , state-of-the-a
 
 <p align="center">
   <img src="./figures/combined_plots.jpg" width="400">
-  <img src="./figures/model_performance_vs_inference_time.jpg" width="400" style="position: relative; top: -40px;">
+  <img src="./figures/model_performance_vs_inference_time.jpg" width="400" style="position: relative; top: -50px;">
 </p>
 
 
