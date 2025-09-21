@@ -6,3 +6,5 @@ dataset/
 **/.ipynb_checkpoints/
 # ignore specific notebook files
 demo2.ipynb
+demo3.ipynb
+demo4.ipynb

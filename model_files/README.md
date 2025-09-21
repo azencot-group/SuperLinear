@@ -13,7 +13,7 @@ model-index:
 ---
 
 
-# SuperLinear: A Mixture of Experts Time Series Forecasting Model
+# Super-Linear: A Mixture of Experts Time Series Forecasting Model
 
 SuperLinear is a novel time series forecasting model that employs a Mixture of Experts (MoE) architecture to achieve superior performance across various forecasting tasks. The model routes inputs to the most relevant experts based on frequency-domain analysis using FFT-based gating networks.
 
@@ -42,18 +42,20 @@ import torch
 model = AutoModelForCausalLM.from_pretrained("SequentialLearning/SuperLinear", trust_remote_code=True)
 
 # Prepare input time series data
-# Shape: [batch_size, sequence_length, features]
+# Shape: [batch_size, channel, sequence_length] or [batch_size, sequence_length]
 input_data = torch.randn(1, 512, 1)
 
 # Generate predictions
 with torch.no_grad():
-    outputs = model(inputs_embeds=input_data, pred_len=96)
-    predictions = outputs.logits  # Shape: [batch_size, prediction_length, features]
+    outputs = model(inputs_embeds=input_data, pred_len=96, get_prob = True)
+    preds = output.logits # Predicted values
+    probs = output.attentions  # Expert probabilities stored here
+  
 ```
 
 ## Configuration
 
-Key configuration parameters:
+Key parameters:
 
 - `train_seq_len`: Training sequence length (default: 512)
 - `train_pred_len`: Training prediction length (default: 96)
@@ -71,9 +73,10 @@ Key configuration parameters:
 If you use SuperLinear in your research, please cite:
 
 ```bibtex
-@article{todo,
-  title={SuperLinear: todo},
-  author={Your Name},
+@article{nochumsohn2025super,
+  title={Super-Linear: A Lightweight Pretrained Mixture of Linear Experts for Time Series Forecasting},
+  author={Nochumsohn, Liran and Marshanski, Raz and Zisling, Hedi and Azencot, Omri},
+  journal={arXiv preprint arXiv:2509.15105},
   year={2025}
 }
 ```

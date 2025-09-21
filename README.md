@@ -16,8 +16,8 @@
 <div align="center">
   
 **[<a href="https://github.com/azencot-group/SuperLinear">GitHub</a>]**
-**[<a href="https://your-docs-url.com">Documentation</a>]**
-
+**[<a href="https://huggingface.co/SequentialLearning/SuperLinear">Hugging Face</a>]**
+**[<a href="https://arxiv.org/abs/2509.15105">Paper</a>]**
 </div>
 
 <p align="center">
@@ -30,6 +30,15 @@ with an efficient architecture combine mixture of frequencies linears experts.
 ## Updates/News:
 
 🚩 **News** (September 2025): Super Linear v1.0.0 has been released!
+
+
+## Results Snapshot 🔬
+Super-Linear delivers competitive, and in some cases surpassing , state-of-the-art Transformer models, all while using a simple linear backbone with just **2.5M** parameters!
+
+<p align="center">
+  <img src="./figures/combined_plots.jpg" width="300">
+  <img src="./figures/model_performance_vs_inference_time.jpg" width="320" style="position: relative; top: -40px;">
+</p>
 
 
 
@@ -111,13 +120,26 @@ In progress
 
 ## TODO ⏳
 
-* Add citation 📚
 * Add Super-Linear to GIFT-Eval leaderboard. The results and notebook for GIFT-Eval can be found in the gift-eval directory.
 
+## Citation
+
+If you use SuperLinear in your research, please cite:
+
+```bibtex
+@article{nochumsohn2025super,
+  title={Super-Linear: A Lightweight Pretrained Mixture of Linear Experts for Time Series Forecasting},
+  author={Nochumsohn, Liran and Marshanski, Raz and Zisling, Hedi and Azencot, Omri},
+  journal={arXiv preprint arXiv:2509.15105},
+  year={2025}
+}
+```
+
 ## Related Resources
-* Time-Moe: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
-* Foundation Models for Time Series Analysis: A Tutorial and Survey, in *KDD*
-  2024. [\[paper\]](https://arxiv.org/abs/2403.14735) [\[Tutorial\]](https://wenhaomin.github.io/FM4TS.github.io/)
+* Are Transformers Effective for Time Series Forecasting? [\[paper\]](https://arxiv.org/abs/2205.13504) [\[GitHub Repo\]](https://github.com/cure-lab/LTSF-Linear)
+* Mixture-of-Linear-Experts for Long-term Time Series Forecasting, in AISTATS 2024. [\[paper\]](https://arxiv.org/abs/2312.06786) [\[GitHub Repo\]](https://github.com/RogerNi/MoLE)
+* A Multi-Task Learning Approach to Linear Multivariate Forecasting, in AISTATS 2025. [\[paper\]](https://arxiv.org/abs/2502.03571) [\[GitHub Repo\]](https://github.com/azencot-group/MTLinear)
+* Time-MoE: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
 
 ## Acknowledgments
 
