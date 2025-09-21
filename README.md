@@ -32,17 +32,17 @@ with an efficient architecture combine mixture of frequencies linears experts.
 🚩 **News** (September 2025): Super Linear v1.0.0 has been released!
 
 
-## Results Snapshot 🔬
+## Result Snapshot 🔬
 Super-Linear delivers competitive, and in some cases surpassing , state-of-the-art Transformer models, all while using a simple linear backbone with just **2.5M** parameters!
 
 <p align="center">
-  <img src="./figures/combined_plots.jpg" width="300">
-  <img src="./figures/model_performance_vs_inference_time.jpg" width="320" style="position: relative; top: -40px;">
+  <img src="./figures/combined_plots.jpg" width="500">
+  <img src="./figures/model_performance_vs_inference_time.jpg" width="500" style="position: relative; top: -40px;">
 </p>
 
 
 
-## 🚀 Getting Started
+## Getting Started 🚀 
 
 ### Installation
 
@@ -51,7 +51,7 @@ Super-Linear delivers competitive, and in some cases surpassing , state-of-the-a
 pip install -r requirements.txt
 ```
 
-## 📈 Making Forecasts (Hugging Face)
+## Making Forecasts (Hugging Face) 📈 
 ```typescript
 import torch
 from transformers import AutoModelForCausalLM
@@ -91,7 +91,7 @@ mkdir dataset
 ```
 **Please put them in the `./dataset` directory**
 
-## Evaluation
+## Evaluation 📐
 
 + [Example] Running the follow command to evaluate on ETTh1 with prediciton horizon 96
 
@@ -113,7 +113,7 @@ python run_eval.py -d dataset/weather/weather.csv -p 720
 ```
 
 
-## 🔥 Full-Shot, Few-Shot
+## Full-Shot, Few-Shot 🔥
 
 In progress
 
@@ -122,7 +122,7 @@ In progress
 
 * Add Super-Linear to GIFT-Eval leaderboard. The results and notebook for GIFT-Eval can be found in the gift-eval directory.
 
-## Citation
+## Citation📕
 
 If you use SuperLinear in your research, please cite:
 
@@ -135,17 +135,21 @@ If you use SuperLinear in your research, please cite:
 }
 ```
 
-## Related Resources
+## Resources 📄
 * Are Transformers Effective for Time Series Forecasting? [\[paper\]](https://arxiv.org/abs/2205.13504) [\[GitHub Repo\]](https://github.com/cure-lab/LTSF-Linear)
 * Mixture-of-Linear-Experts for Long-term Time Series Forecasting, in AISTATS 2024. [\[paper\]](https://arxiv.org/abs/2312.06786) [\[GitHub Repo\]](https://github.com/RogerNi/MoLE)
 * A Multi-Task Learning Approach to Linear Multivariate Forecasting, in AISTATS 2025. [\[paper\]](https://arxiv.org/abs/2502.03571) [\[GitHub Repo\]](https://github.com/azencot-group/MTLinear)
 * Time-MoE: Billion-Scale Time Series Foundation Models with Mixture of Experts, in ICLR 2025. [\[paper\]](https://arxiv.org/abs/2409.16040) [\[GitHub Repo\]](https://github.com/Time-MoE/Time-MoE)
 
-## Acknowledgments
+### Acknowledgments
 
 We appreciate the following GitHub repos a lot for their valuable code and efforts.
 - Time-Moe [\[repo\]](https://github.com/Time-MoE/Time-MoE)
 - Time-Series-Library [\[repo\]](https://github.com/thuml/Time-Series-Library)
+
+## Contact 📫
+
+Liran Nochumsohn: lirannoc@post.bgu.ac.il
 
 
 ## License
