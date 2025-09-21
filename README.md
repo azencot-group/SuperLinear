@@ -36,8 +36,8 @@ with an efficient architecture combine mixture of frequencies linears experts.
 Super-Linear delivers competitive, and in some cases surpassing , state-of-the-art Transformer models, all while using a simple linear backbone with just **2.5M** parameters!
 
 <p align="center">
-  <img src="./figures/combined_plots.jpg" width="500">
-  <img src="./figures/model_performance_vs_inference_time.jpg" width="500" style="position: relative; top: -40px;">
+  <img src="./figures/combined_plots.jpg" width="400">
+  <img src="./figures/model_performance_vs_inference_time.jpg" width="400" style="position: relative; top: -40px;">
 </p>
 
 
