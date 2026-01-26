@@ -11,84 +11,7 @@ from transformers.modeling_outputs import CausalLMOutputWithCrossAttentions
 from .configuration_super_linear import SuperLinearConfig
 
 
-"-------------------------------------------------------------------------------------------------------------------"
-class RevIN(nn.Module):
-    def __init__(self, num_features: int, eps=1e-5, affine=True, norm_type=None, subtract_last=False):
-        """
-        :param num_features: the number of features or channels
-        :param eps: a value added for numerical stability
-        :param affine: if True, RevIN has learnable affine parameters
-        """
-        super(RevIN, self).__init__()
-        self.num_features = num_features
-        self.eps = eps
-        self.affine = affine
-        self.subtract_last = subtract_last
-        self.norm_type = norm_type
-        if self.affine:
-            self._init_params()
 
-    def forward(self, x, mode: str):
-        if mode == 'norm':
-            self._get_statistics(x)
-            x = self._normalize(x)
-        elif mode == 'denorm':
-            x = self._denormalize(x)
-        else:
-            raise NotImplementedError
-        return x
-
-    def _init_params(self):
-        # initialize RevIN params: (C,)
-        self.affine_weight = nn.Parameter(torch.ones(self.num_features))
-        self.affine_bias = nn.Parameter(torch.zeros(self.num_features))
-
-    def _get_statistics(self, x):
-        dim2reduce = tuple(range(1, x.ndim-1))
-
-        if self.subtract_last:
-            self.last = x[:, -1:, :].detach()
-            self.mean = torch.mean(x[:, :-1, :], dim=dim2reduce, keepdim=True).detach()
-        else:
-            self.mean = torch.mean(x, dim=dim2reduce, keepdim=True).detach()
-            
-        self.stdev = torch.sqrt(torch.var(x, dim=dim2reduce, keepdim=True, unbiased=False) + self.eps).detach()
-        
-        if self.norm_type == "l1":
-            self.stdev = torch.mean(torch.abs(x - self.mean), dim=dim2reduce, keepdim=True).detach()
-        elif self.norm_type == "l2":
-            self.stdev = torch.sqrt(torch.mean((x - self.mean) ** 2, dim=dim2reduce, keepdim=True) + self.eps).detach()
-
-    def _normalize(self, x):
-        if self.subtract_last:
-            x = x - self.last
-        else:
-            x = x - self.mean
-        x = x / self.stdev
-
-        if self.norm_type in ["l1", "l2"]:
-            x = x / self.stdev
-
-        if self.affine:
-            x = x * self.affine_weight
-            x = x + self.affine_bias
-        return x
-
-    def _denormalize(self, x):
-        if self.affine:
-            x = x - self.affine_bias
-            x = x / (self.affine_weight + self.eps*self.eps)
-            
-        if self.norm_type in ["l1", "l2"]:
-            x = x * self.stdev
-            
-        x = x * self.stdev
-        if self.subtract_last:
-            x = x + self.last
-        else:
-            x = x + self.mean
-        
-        return x
 "-------------------------------------------------------------------------------------------------------------------"
 class Linear(nn.Module):
     """Simple linear layer expert."""
@@ -124,27 +47,6 @@ class Mean(nn.Module):
         x = x.mean(dim=1).unsqueeze(1).repeat(1, self.output_len)
         return x # to [Batch, Output length, Channel]  
 
-class RLinear(nn.Module):
-    """Reversible Instance Normalization Linear layer expert."""
-    def __init__(self, input_len, output_len):
-        super(RLinear, self).__init__()
-        self.Linear = nn.Linear(input_len, output_len)
-        self.revin_layer = RevIN(num_features = None, affine=False, norm_type = None, subtract_last = False)
-
-    def forward(self, x):
-        # x: [Batch, Input length,Channel]
-        x_shape = x.shape
-        if len(x_shape) == 2:
-            x = x.unsqueeze(-1)
-        x = x.clone()
-        x = self.revin_layer(x, 'norm')
-        
-        x = self.Linear(x.permute(0,2,1)).permute(0,2,1).clone()
-        x = self.revin_layer(x, 'denorm')
-        if len(x_shape) == 2:
-            x = x.squeeze(-1)
-        return x # to [Batch, Output length, Channel]  
-
 "-------------------------------------------------------------------------------------------------------------------"
 class SparseMoE(nn.Module):
     """
@@ -171,6 +73,24 @@ class SparseMoE(nn.Module):
         self.use_fft = configs.use_fft
         self.fft_len = configs.fft_len
         self.moe_norm = configs.moe_norm
+
+        # Cache for batched expert parameters
+        self.stacked_weights = None
+        self.stacked_biases = None
+
+        # Separate linear and non-linear experts
+        self.linear_expert_types = ['Linear']
+        self.linear_experts = []
+        self.nonlinear_experts = []
+
+        for idx, expert in enumerate(self.experts):
+            expert_type = type(expert).__name__
+            if expert_type in self.linear_expert_types:
+                self.linear_experts.append(idx)
+            else:
+                self.nonlinear_experts.append(idx)
+        self.num_linear_experts = len(self.linear_experts)
+        self.num_nonlinear_experts = len(self.nonlinear_experts)
     
         # Initialize gating network based on configuration
         if self.use_fft:
@@ -180,6 +100,18 @@ class SparseMoE(nn.Module):
 
         if self.moe_norm:
             self.batch_norm = nn.BatchNorm1d(self.num_experts)
+
+    def _get_stacked_expert_params(self):
+        """Get batched parameters for linear experts."""
+        if self.stacked_weights is None:
+            # Stack all linear expert weights: [n_linear_experts, pred_len, seq_len]
+            weights = torch.stack([self.experts[i].Linear.weight for i in self.linear_experts], dim=0)
+            # Stack all linear expert biases: [n_linear_experts, pred_len]
+            biases = torch.stack([self.experts[i].Linear.bias for i in self.linear_experts], dim=0)
+
+            self.stacked_weights = weights
+            self.stacked_biases = biases
+        return self.stacked_weights, self.stacked_biases
 
     def get_periodogram(self, inputs, n=10000):
         """
@@ -252,9 +184,32 @@ class SparseMoE(nn.Module):
 
         # Normalize the gate values with softmax
         topk_gates = F.softmax(topk_values, dim=1)
-    
-        # Get outputs from all experts
-        expert_outputs = torch.stack([self.experts[i](x) for i in range(self.num_experts)], dim=1)
+
+        batch_size = x.size(0)
+
+        # RLinear (REVIN) normalization
+        x_mean, x_std = torch.mean(x, dim=1, keepdim=True), torch.std(x, dim=1, keepdim=True)
+        x_norm = (x - x_mean) / (x_std + 1e-5)
+
+        # Initialize expert_outputs tensor with correct shape (infer pred_len from first expert)
+        pred_len = self.experts[0](x_norm[:1]).shape[-1]
+        expert_outputs = torch.zeros(batch_size, self.num_experts, pred_len, device=x.device)
+
+        # Process linear experts using batched operations
+        if self.num_linear_experts > 0:
+            all_weights, all_biases = self._get_stacked_expert_params()
+            # Batched matrix multiplication: [n_linear_experts, pred_len, seq_len] @ [B, seq_len]
+            # Using einsum: expert, pred, seq @ batch, seq -> batch, expert, pred
+            linear_expert_outputs = torch.einsum('epd,bd->bep', all_weights, x_norm)
+            # Add biases: [n_linear_experts, pred_len] -> [1, n_linear_experts, pred_len]
+            linear_expert_outputs = linear_expert_outputs + all_biases.unsqueeze(0)
+            # Place linear expert outputs in their correct positions
+            for i, expert_idx in enumerate(self.linear_experts):
+                expert_outputs[:, expert_idx, :] = linear_expert_outputs[:, i, :]
+
+        # Process non-linear experts separately and place in correct positions
+        for expert_idx in self.nonlinear_experts:
+            expert_outputs[:, expert_idx, :] = self.experts[expert_idx](x_norm)
 
         # Select only the outputs from the top-k experts
         topk_indices_expanded = topk_indices.unsqueeze(-1).expand(-1, -1, expert_outputs.size(2))
@@ -262,7 +217,10 @@ class SparseMoE(nn.Module):
 
         # Combine expert outputs using the gate values
         output = torch.sum(topk_gates.unsqueeze(2) * sparse_expert_outputs, dim=1)
-        
+
+        # RLinear (REVIN) denormalization
+        output = output * (x_std + 1e-5) + x_mean
+
         if get_prob:
             expert_probs = F.softmax(gate_outputs, dim=1)
             return output, expert_probs
@@ -324,7 +282,7 @@ class Model(nn.Module):
                 elif expert_freq.lower() == "mean":    
                     self.experts[expert_freq] = Mean(self.train_seq_len, self.train_pred_len)
                 else:
-                    self.experts[expert_freq] = RLinear(self.train_seq_len, self.train_pred_len)                        
+                    self.experts[expert_freq] = Linear(self.train_seq_len, self.train_pred_len)                        
             self.n_experts = len(self.experts)
         else:
             raise ValueError("Please specify experts in the configuration.")
@@ -334,11 +292,11 @@ class Model(nn.Module):
         if comp_moe > 0:
             if comp_moe == 1:
                 print("Creating complementary expert")
-                self.experts["comp"] = RLinear(self.train_seq_len, self.train_pred_len)
+                self.experts["comp"] = Linear(self.train_seq_len, self.train_pred_len)
             else:
                 for i in range(comp_moe):
                     print(f"Creating complementary expert {i}")
-                    self.experts["comp_"+str(i)] = RLinear(self.train_seq_len, self.train_pred_len)
+                    self.experts["comp_"+str(i)] = Linear(self.train_seq_len, self.train_pred_len)
                     
         # Initialize the MoE layer and dropout    
         self.moe = SparseMoE(configs, experts=self.experts.values())
@@ -619,6 +577,7 @@ class Model(nn.Module):
             
         if x_in.dim() == 2:
             out = out.squeeze(1)
+
         
         if get_prob:
             expert_probs = expert_probs.reshape(B, V, expert_probs.shape[-1])

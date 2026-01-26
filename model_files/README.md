@@ -43,13 +43,13 @@ model = AutoModelForCausalLM.from_pretrained("SequentialLearning/SuperLinear", t
 
 # Prepare input time series data
 # Shape: [batch_size, channel, sequence_length] or [batch_size, sequence_length]
-input_data = torch.randn(1, 512, 1)
+input_data = torch.randn(1, 1, 512)
 
 # Generate predictions
 with torch.no_grad():
     outputs = model(inputs_embeds=input_data, pred_len=96, get_prob = True)
-    preds = output.logits # Predicted values
-    probs = output.attentions  # Expert probabilities stored here
+    preds = outputs.logits # Predicted values
+    probs = outputs.attentions  # Expert probabilities stored here
   
 ```
 
@@ -64,9 +64,11 @@ Key parameters:
 - `freq_experts`: Frequency-specific expert configuration
 - `moe_temp`: Temperature for expert selection during inference (default: 1)
 
-## Link to GitHub
+## Links
 
-[https://github.com/azencot-group/SuperLinear](https://github.com/azencot-group/SuperLinear)
+- **GitHub Repository**: [https://github.com/azencot-group/SuperLinear](https://github.com/azencot-group/SuperLinear)
+- **Paper**: [https://arxiv.org/abs/2509.15105](https://arxiv.org/abs/2509.15105)
+
 
 ## Citation
 

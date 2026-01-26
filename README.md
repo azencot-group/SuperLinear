@@ -29,15 +29,16 @@ with an efficient architecture combine mixture of frequencies linears experts.
 
 ## Updates/News:
 
+🚩 **News** (January 2026): Super Linear optimized code update! now inference is more than $\times 10$ faster! which makes it the fastest pre-trained forecaster!
+
 🚩 **News** (September 2025): Super Linear v1.0.0 has been released!
 
 
 ## Result Snapshot 🔬
-Super-Linear delivers competitive, and in some cases surpassing , state-of-the-art Transformer models, all while using a simple linear backbone with just **2.5M** parameters!
+Super-Linear delivers competitive, and in some cases surpassing , state-of-the-art Transformer models, all while using a simple linear backbone with just **2.5M** parameters, and superior inference speed!
 
 <p align="center">
-  <img src="./figures/combined_plots.jpg" width="400">
-  <img src="./figures/model_performance_vs_inference_time.jpg" width="400" style="position: relative; top: -50px;">
+  <img src="./figures/model_performance_vs_inference_time_combined_page-0001.jpg" width="400" style="position: relative; top: -2px;">
 </p>
 
 
