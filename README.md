@@ -3,15 +3,6 @@
   <h2><b>Super-Linear: A Lightweight Pretrained Mixture of Linear Experts for Time Series Forecasting</b></h2>
 </div>
 
-<div align="center">
-  
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-![](https://img.shields.io/github/last-commit/azencot-group/SuperLinear?color=green)
-![](https://img.shields.io/github/stars/azencot-group/SuperLinear?color=yellow)
-![](https://img.shields.io/github/forks/azencot-group/SuperLinear?color=lightblue)
-![](https://img.shields.io/badge/PRs-Welcome-green)
-
-</div>
 
 
 <p align="center">
