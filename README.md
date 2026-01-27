@@ -13,12 +13,6 @@
 
 </div>
 
-<div align="center">
-  
-**[<a href="https://github.com/azencot-group/SuperLinear">GitHub</a>]**
-**[<a href="https://huggingface.co/SequentialLearning/SuperLinear">Hugging Face</a>]**
-**[<a href="https://arxiv.org/abs/2509.15105">Paper</a>]**
-</div>
 
 <p align="center">
   <img src="./figures/logo.png" width="600">
@@ -26,12 +20,6 @@
 
 > Super Linear provides a **comprehensive foundation** for time series forecasting achieveing competitive performance against more complex models
 with an efficient architecture combine mixture of frequencies linears experts.
-
-## Updates/News:
-
-🚩 **News** (January 2026): Super Linear optimized code update! now inference is more than $\times 10$ faster! which makes it the fastest pre-trained forecaster!
-
-🚩 **News** (September 2025): Super Linear v1.0.0 has been released!
 
 
 ## Result Snapshot 🔬
@@ -58,7 +46,6 @@ import torch
 from transformers import AutoModelForCausalLM
 
 model_path = "./model_files/" # local
-model_path = "SequentialLearning/SuperLinear" # hugging_face
 model = AutoModelForCausalLM.from_pretrained(model_path,trust_remote_code=True, force_download=True)
 
 seq_len = 512
@@ -119,23 +106,6 @@ python run_eval.py -d dataset/weather/weather.csv -p 720
 In progress
 
 
-## TODO ⏳
-
-* Add Super-Linear to GIFT-Eval leaderboard. The results and notebook for GIFT-Eval can be found in the gift-eval directory.
-
-## Citation📕
-
-If you use SuperLinear in your research, please cite:
-
-```bibtex
-@article{nochumsohn2025super,
-  title={Super-Linear: A Lightweight Pretrained Mixture of Linear Experts for Time Series Forecasting},
-  author={Nochumsohn, Liran and Marshanski, Raz and Zisling, Hedi and Azencot, Omri},
-  journal={arXiv preprint arXiv:2509.15105},
-  year={2025}
-}
-```
-
 ## Resources 📄
 * Are Transformers Effective for Time Series Forecasting? [\[paper\]](https://arxiv.org/abs/2205.13504) [\[GitHub Repo\]](https://github.com/cure-lab/LTSF-Linear)
 * Mixture-of-Linear-Experts for Long-term Time Series Forecasting, in AISTATS 2024. [\[paper\]](https://arxiv.org/abs/2312.06786) [\[GitHub Repo\]](https://github.com/RogerNi/MoLE)
@@ -147,11 +117,6 @@ If you use SuperLinear in your research, please cite:
 We appreciate the following GitHub repos a lot for their valuable code and efforts.
 - Time-Moe [\[repo\]](https://github.com/Time-MoE/Time-MoE)
 - Time-Series-Library [\[repo\]](https://github.com/thuml/Time-Series-Library)
-
-## Contact 📫
-
-Liran Nochumsohn: lirannoc@post.bgu.ac.il
-
 
 ## License
 
