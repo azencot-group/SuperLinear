@@ -1,6 +1,6 @@
 
 <div align="center">
-  <h2><b>Super-Linear: A Lightweight Pretrained Mixture of Linear Experts for Time Series Forecasting</b></h2>
+  <h2><b>Super-Linear: A Lightweight Pretrained Mixture of Linear Experts for Time Series Forecasting (TMLR 2026)</b></h2>
 </div>
 
 <div align="center">
@@ -29,6 +29,8 @@ with an efficient architecture combine mixture of frequencies linears experts.
 
 ## Updates/News:
 
+🚩 **News** (April 2026): Accepted to TMLR!
+
 🚩 **News** (January 2026): Super Linear optimized code update! now inference is more than $\times 10$ faster! which makes it the fastest pre-trained forecaster!
 
 🚩 **News** (September 2025): Super Linear v1.0.0 has been released!
@@ -38,7 +40,7 @@ with an efficient architecture combine mixture of frequencies linears experts.
 Super-Linear delivers competitive, and in some cases surpassing , state-of-the-art Transformer models, all while using a simple linear backbone with just **2.5M** parameters, and superior inference speed!
 
 <p align="center">
-  <img src="./figures/model_performance_vs_inference_time_combined_page-0001.jpg" width="400" style="position: relative; top: -2px;">
+  <img src="./figures/model_performance_vs_inference_time_combined_new (1)_page-0001.jpg" width="400" style="position: relative; top: -2px;">
 </p>
 
 
